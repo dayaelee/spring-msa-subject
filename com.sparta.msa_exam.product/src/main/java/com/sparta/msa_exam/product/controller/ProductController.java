@@ -43,8 +43,4 @@ public class ProductController {
 
         return new ResponseEntity<>(productResponseDtoList, HttpStatus.OK);
     }
-
-
-
-
 }
