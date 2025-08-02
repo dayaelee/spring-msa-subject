@@ -3,7 +3,10 @@ package com.sparta.msa_exam.product.controller;
 import com.sparta.msa_exam.product.dto.ProductRequestDto;
 import com.sparta.msa_exam.product.dto.ProductResponseDto;
 import com.sparta.msa_exam.product.service.ProductService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +21,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class ProductController {
+
+    @Value("${server.port}")
+    private String port;
 
     private final ProductService productService;
 
@@ -36,8 +42,8 @@ public class ProductController {
     }
     // 상품 목록 조회 API
     @GetMapping("/products")
-    public ResponseEntity<List<ProductResponseDto>> getProducts(){
-
+    public ResponseEntity<List<ProductResponseDto>> getProducts(HttpServletResponse response){
+        response.setHeader("Server-Port", port);
         // 상품 리스트 받아옴
         List<ProductResponseDto> productResponseDtoList = productService.findAll();
 
