@@ -1,5 +1,6 @@
 package com.sparta.msa_exam.order.service;
 
+import com.sparta.msa_exam.order.client.ProductClient;
 import com.sparta.msa_exam.order.dto.OrderProductDto;
 import com.sparta.msa_exam.order.dto.OrderProductRequestDto;
 import com.sparta.msa_exam.order.dto.OrderRequestDto;
@@ -9,6 +10,7 @@ import com.sparta.msa_exam.order.entity.Orders;
 import com.sparta.msa_exam.order.repository.OrderProductRepository;
 import com.sparta.msa_exam.order.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class OrderService {
 
     private final OrdersRepository ordersRepository;
     private final OrderProductRepository orderProductRepository;
+    private final ProductClient productClient;
 
     public OrderResponseDto save(OrderRequestDto request, boolean fail){
         // 1. 주문 엔티티 생성 및 저장
@@ -46,6 +49,12 @@ public class OrderService {
 //        return new OrderResponseDto(orders.getOrder_id(), orders.getProduct_ids());
     }
 
+    public boolean checkProductExists(Long productId) {
+        return productClient.getAllProducts()
+                .stream()
+                .anyMatch(product -> product.getProduct_id().equals(productId));
+    }
+
     public OrderResponseDto add(Long order_id, Long product_id){
         // 주문 상품 추가
         OrderProduct orderProduct = new OrderProduct();
@@ -64,11 +73,10 @@ public class OrderService {
         return new OrderResponseDto(orders.getOrder_id(), orderProductDtos);
     }
 
+    @Cacheable(value = "order", key = "#orderId")
     public OrderResponseDto get(Long order_id){
-        Orders orders = ordersRepository.getReferenceById(order_id);
-//        OrderProduct orderProduct = orderProductRepository.getReferenceById(order_id);
-//        System.out.println(orderProduct.toString()+" 안되나요?");
-        // List<OrderProduct> orderProducts = findOrder.getOrderProduct();
+        Orders orders = ordersRepository.findById(order_id)
+                .orElseThrow(() -> new RuntimeException("주문을 찾을 수 없습니다."));
 
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
