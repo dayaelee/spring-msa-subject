@@ -28,6 +28,13 @@ ext {
 }
 
 dependencies {
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// Spring Cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
