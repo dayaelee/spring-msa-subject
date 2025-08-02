@@ -12,9 +12,9 @@ spring-msa-subject는 Spring Boot와 Spring Cloud를 이용한 마이크로서�
 
 - Auth Service (com.sparta.msa_exam.auth)
 
-  -  사용자 인증/인가 처리
+    -  사용자 인증/인가 처리
 
-  -  토큰 발급 및 검증
+    -  토큰 발급 및 검증
 
 - Gateway Service (com.sparta.msa_exam.gateway)
 
@@ -69,7 +69,7 @@ spring-msa-subject
 
 ##🚀 실행 방법
 
-1. 환경 준비   
+1. 환경 준비
 -  Java 17 이상
 
 -  MySQL 설치
@@ -78,16 +78,16 @@ spring-msa-subject
 
 2. 데이터베이스 생성
 3. 설정 파일 수정
-   
+
    각 서비스의 application.yml에서 DB, 포트, JWT 시크릿 키 등을 환경에 맞게 수정
 
 4. 서비스 실행 순서
     1. Server
     1. Gateway Service
     1. Auth Service
-    1. Product Service 
-   4. Order Service
-    
+    1. Product Service
+    4. Order Service
+
 
 ##📡 주요 기능
 
