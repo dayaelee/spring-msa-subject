@@ -14,4 +14,8 @@ public class OrderResponseDto {
         this.order_id = order_id;
         this.product_ids = product_ids;
     }
+
+    public OrderResponseDto(Long order_id) {
+        this.order_id = order_id;
+    }
 }
