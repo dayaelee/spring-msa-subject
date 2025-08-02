@@ -6,6 +6,7 @@ import com.sparta.msa_exam.order.dto.OrderRequestDto;
 import com.sparta.msa_exam.order.dto.OrderResponseDto;
 import com.sparta.msa_exam.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 // final이 붙은 필드나 @NonNull이 붙은 필드만 골라서 자동으로
 // 생성자를 만들어줌
 public class OrderController {
+    @Value("${server.port}")
+    private String port;
 
     private final OrderService orderService;
 
@@ -42,6 +45,16 @@ public class OrderController {
     // 주문에 상품을 추가하는 API
     @PutMapping("/orders/{orderId}")
     public ResponseEntity<OrderResponseDto> addProduct(@PathVariable("orderId") Long order_id, @RequestBody OrderProductRequestDto product){
+
+        // 주문에 상품을 추가하는 API를 조건에 맞게 구성하기
+
+        boolean exists = orderService.checkProductExists(product.getProduct_id());
+
+        if (!exists) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+
         OrderResponseDto orderResponseDto = orderService.add(order_id, product.getProduct_id());
 
         return ResponseEntity.ok(orderResponseDto);
@@ -50,7 +63,6 @@ public class OrderController {
     // 주문 단 건 조회 API
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable("orderId") Long order_id){
-//        OrderProductResponseDto orderProductResponseDto = orderService.get(order_id);
         OrderResponseDto orderResponseDto = orderService.get(order_id);
         return ResponseEntity.ok(orderResponseDto);
     }
